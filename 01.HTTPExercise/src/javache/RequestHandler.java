@@ -8,12 +8,13 @@ public class RequestHandler {
     public byte[] handleRequest(String request) {
 
         HttpRequest httpRequest = new HttpRequestImpl(
-                "POST /url HTTP/1.1\n" +
-                        "Date: 17/01/2019\n" +
-                        "Host: localhost:8000\n" +
-                        "Content-Type: application/xml\n" +
-                        "Authorization: Basic UGVzaG8=\n" +
-                        "name=Yum&amp;quantity=50&amp;price=10"
+                "POST /url HTTP/1.1\r\n" +
+                        "Date: 17/01/2019\r\n" +
+                        "Host: localhost:8000\r\n" +
+                        "Content-Type: application/xml\r\n" +
+                        "Authorization: Basic UGVzaG8=\r\n" +
+                        "<CRLF>\r\n" +
+                        "name=Yum&quantity=50&price=10"
         );
 
         StringBuilder sb = new StringBuilder();

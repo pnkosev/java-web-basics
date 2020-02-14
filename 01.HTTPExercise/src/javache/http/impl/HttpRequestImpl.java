@@ -17,6 +17,8 @@ public class HttpRequestImpl implements HttpRequest {
     private void initialize(String requestContent) {
         this.initializeMethod(requestContent);
         this.initializeRequestUrl(requestContent);
+        this.initializeHeaders(requestContent);
+        this.initializeBodyParams(requestContent);
     }
 
     private void initializeMethod(String requestContent) {
@@ -27,14 +29,46 @@ public class HttpRequestImpl implements HttpRequest {
         this.setRequestUrl(requestContent.split("\\s")[1]);
     }
 
+    private void initializeHeaders(String requestContent) {
+        this.headers = new HashMap<>();
+
+        String[] requestLines = requestContent.split("\\r\\n"); // "\\r\\n"
+
+        for (int i = 1; i < requestLines.length; i++) {
+            String currentLine = requestLines[i];
+            String[] header = currentLine.split("\\:\\s");
+            if (header.length != 1) {
+                this.addHeader(header[0], header[1]);
+            }
+        }
+    }
+
+    private void initializeBodyParams(String requestContent) {
+        if (this.method.equals("POST")) {
+            this.bodyParams = new HashMap<>();
+
+            String[] requestParams = requestContent.split("\\r\\n");
+
+            if (requestParams.length - this.headers.size() > 2) {
+                String[] params = requestParams[requestParams.length - 1].split("\\&");
+                for (int i = 0; i < params.length; i++) {
+                    String[] param = params[i].split("=");
+                    this.addBodyParameter(param[0], param[1]);
+                }
+            }
+        }
+
+        System.out.println();
+    }
+
     @Override
     public HashMap<String, String> getHeaders() {
-        return null;
+        return this.headers;
     }
 
     @Override
     public HashMap<String, String> getBodyParameters() {
-        return null;
+        return this.bodyParams;
     }
 
     @Override
@@ -59,12 +93,12 @@ public class HttpRequestImpl implements HttpRequest {
 
     @Override
     public void addHeader(String header, String value) {
-
+        this.headers.putIfAbsent(header, value);
     }
 
     @Override
     public void addBodyParameter(String parameter, String value) {
-
+        this.bodyParams.putIfAbsent(parameter, value);
     }
 
     @Override
