@@ -29,7 +29,7 @@ public class Server {
                 task.run();
             } catch (SocketTimeoutException e) {
                 System.out.println(SOCKET_TIMEOUT_EXCEPTION_MESSAGE);
-                e.printStackTrace();
+//                e.printStackTrace();
             }
         }
     }
