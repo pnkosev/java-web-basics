@@ -2,6 +2,7 @@ package javache;
 
 import javache.http.HttpRequest;
 import javache.http.HttpResponse;
+import javache.http.HttpStatus;
 import javache.http.impl.HttpRequestImpl;
 import javache.http.impl.HttpResponseImpl;
 
@@ -33,21 +34,21 @@ public class RequestHandler {
     }
 
     private byte[] ok(byte[] result) {
-        this.response.setStatusCode(200);
+        this.response.setStatusCode(HttpStatus.Ok);
         this.response.setContent(result);
 
         return this.response.getBytes();
     }
 
     private byte[] notFound(byte[] result) {
-        this.response.setStatusCode(404);
+        this.response.setStatusCode(HttpStatus.NotFound);
         this.response.setContent(result);
 
         return this.response.getBytes();
     }
 
     private byte[] internalServerError(byte[] result) {
-        this.response.setStatusCode(500);
+        this.response.setStatusCode(HttpStatus.InternalServerError);
         this.response.setContent(result);
 
         return this.response.getBytes();
@@ -84,7 +85,7 @@ public class RequestHandler {
         try {
             result = Files.readAllBytes(Paths.get(path));
         } catch (IOException e) {
-            this.internalServerError(("Something went wrong").getBytes());
+            return this.internalServerError(("Something went wrong").getBytes());
         }
 
         this.response.addHeader("Content-Type", this.getMimeType(file));
@@ -112,7 +113,7 @@ public class RequestHandler {
         try {
             result = Files.readAllBytes(Paths.get(path));
         } catch (IOException e) {
-            this.internalServerError(("Something went wrong").getBytes());
+            return this.internalServerError(("Something went wrong").getBytes());
         }
 
         this.response.addHeader("Content-Type", this.getMimeType(file));

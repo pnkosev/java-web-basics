@@ -2,13 +2,14 @@ package javache.http.impl;
 
 import javache.WebConstants;
 import javache.http.HttpResponse;
+import javache.http.HttpStatus;
 
 import java.util.HashMap;
 import java.util.Map;
 
 public class HttpResponseImpl implements HttpResponse {
     private HashMap<String, String> headers;
-    private int statusCode;
+    private HttpStatus statusCode;
     private byte[] content;
 
     public HttpResponseImpl() {
@@ -19,7 +20,7 @@ public class HttpResponseImpl implements HttpResponse {
     private byte[] getHeadersBytes() {
         StringBuilder sb = new StringBuilder();
 
-        sb.append(WebConstants.SERVER_HTTP_VERSION).append(this.getStatusCode()).append(" OK").append(System.lineSeparator());
+        sb.append(WebConstants.SERVER_HTTP_VERSION).append(this.statusCode).append(System.lineSeparator());
 
         for (Map.Entry<String, String> entry : headers.entrySet()) {
             sb.append(entry.getKey()).append(": ").append(entry.getValue()).append(System.lineSeparator());
@@ -49,7 +50,7 @@ public class HttpResponseImpl implements HttpResponse {
     }
 
     @Override
-    public int getStatusCode() {
+    public HttpStatus getStatusCode() {
         return this.statusCode;
     }
 
@@ -59,7 +60,7 @@ public class HttpResponseImpl implements HttpResponse {
     }
 
     @Override
-    public void setStatusCode(int statusCode) {
+    public void setStatusCode(HttpStatus statusCode) {
         this.statusCode = statusCode;
     }
 
