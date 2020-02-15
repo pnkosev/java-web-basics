@@ -13,7 +13,7 @@ public class Server {
     private ServerSocket server;
 
     public Server() {
-        this.port = 8080;
+        this.port = WebConstants.SERVER_PORT ;
     }
 
     public void run() throws IOException {

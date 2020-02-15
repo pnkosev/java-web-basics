@@ -57,8 +57,6 @@ public class HttpRequestImpl implements HttpRequest {
                 }
             }
         }
-
-        System.out.println();
     }
 
     @Override
