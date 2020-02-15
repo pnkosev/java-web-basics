@@ -51,8 +51,8 @@ public class HttpRequestImpl implements HttpRequest {
 
             if (requestParams.length - this.headers.size() > 2) {
                 String[] params = requestParams[requestParams.length - 1].split("\\&");
-                for (int i = 0; i < params.length; i++) {
-                    String[] param = params[i].split("=");
+                for (String s : params) {
+                    String[] param = s.split("=");
                     this.addBodyParameter(param[0], param[1]);
                 }
             }

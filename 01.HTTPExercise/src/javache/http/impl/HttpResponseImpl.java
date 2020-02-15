@@ -3,6 +3,7 @@ package javache.http.impl;
 import javache.http.HttpResponse;
 
 import java.util.HashMap;
+import java.util.Map;
 
 public class HttpResponseImpl implements HttpResponse {
     private HashMap<String, String> headers;
@@ -14,6 +15,30 @@ public class HttpResponseImpl implements HttpResponse {
         this.setContent(new byte[0]);
     }
 
+    private byte[] getHeadersBytes() {
+        StringBuilder sb = new StringBuilder();
+
+        sb.append("HTTP/ 1.1 ").append(this.getStatusCode()).append("OK").append(System.lineSeparator());
+
+        for (Map.Entry<String, String> entry : headers.entrySet()) {
+            sb.append(entry.getKey()).append(": ").append(entry.getValue()).append(System.lineSeparator());
+        }
+
+        return sb.toString().getBytes();
+    }
+
+    @Override
+    public byte[] getBytes() {
+        byte[] headersBytes = this.getHeadersBytes();
+        byte[] content = this.getContent();
+
+        byte[] fullResponse = new byte[headersBytes.length + content.length];
+
+        System.arraycopy(headersBytes, 0, fullResponse, 0, headersBytes.length);
+        System.arraycopy(content, 0, fullResponse, headersBytes.length, content.length);
+
+        return fullResponse;
+    }
 
     @Override
     public HashMap<String, String> getHeaders() {
@@ -28,11 +53,6 @@ public class HttpResponseImpl implements HttpResponse {
     @Override
     public byte[] getContent() {
         return this.content;
-    }
-
-    @Override
-    public byte[] getBytes() {
-        return new byte[0];
     }
 
     @Override
