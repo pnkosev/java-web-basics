@@ -19,11 +19,13 @@ public class HttpResponseImpl implements HttpResponse {
     private byte[] getHeadersBytes() {
         StringBuilder sb = new StringBuilder();
 
-        sb.append(WebConstants.SERVER_HTTP_VERSION).append(this.getStatusCode()).append("OK").append(System.lineSeparator());
+        sb.append(WebConstants.SERVER_HTTP_VERSION).append(this.getStatusCode()).append(" OK").append(System.lineSeparator());
 
         for (Map.Entry<String, String> entry : headers.entrySet()) {
             sb.append(entry.getKey()).append(": ").append(entry.getValue()).append(System.lineSeparator());
         }
+
+        sb.append(System.lineSeparator());
 
         return sb.toString().getBytes();
     }

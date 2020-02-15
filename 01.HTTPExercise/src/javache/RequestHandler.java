@@ -1,29 +1,140 @@
 package javache;
 
 import javache.http.HttpRequest;
+import javache.http.HttpResponse;
 import javache.http.impl.HttpRequestImpl;
+import javache.http.impl.HttpResponseImpl;
+
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 
 public class RequestHandler {
 
-    public byte[] handleRequest(String request) {
+    private static final String HTML_EXTENSION = ".html";
+    private HttpRequest request;
+    private HttpResponse response;
 
-        HttpRequest httpRequest = new HttpRequestImpl(
-                "POST /url HTTP/1.1\r\n" +
-                        "Date: 17/01/2019\r\n" +
-                        "Host: localhost:8000\r\n" +
-                        "Content-Type: application/xml\r\n" +
-                        "Authorization: Basic UGVzaG8=\r\n" +
-                        "<CRLF>\r\n" +
-                        "name=Yum&quantity=50&price=10"
-        );
+    public byte[] handleRequest(String requestContent) {
+        this.request = new HttpRequestImpl(requestContent);
+        this.response = new HttpResponseImpl();
+        String method = this.request.getMethod();
 
-        StringBuilder sb = new StringBuilder();
+        byte[] result = null;
 
-        sb.append("HTTP 1.1 200 OK").append(System.lineSeparator());
-        sb.append("Content-Type: text/html").append(System.lineSeparator());
-        sb.append(System.lineSeparator());
-        sb.append("<h1>Hello, World!</h1>").append(System.lineSeparator());
+        if (method.equalsIgnoreCase("get")) {
+            result = this.processGetRequest();
+        } else if (method.equalsIgnoreCase("post")) {
+            return new byte[0];
+        }
 
-        return sb.toString().getBytes();
+        return result;
+    }
+
+    private byte[] ok(byte[] result) {
+        this.response.setStatusCode(200);
+        this.response.setContent(result);
+
+        return this.response.getBytes();
+    }
+
+    private byte[] notFound(byte[] result) {
+        this.response.setStatusCode(404);
+        this.response.setContent(result);
+
+        return this.response.getBytes();
+    }
+
+    private byte[] internalServerError(byte[] result) {
+        this.response.setStatusCode(500);
+        this.response.setContent(result);
+
+        return this.response.getBytes();
+    }
+
+    private byte[] processGetRequest() {
+        String requestUrl = this.request.getRequestUrl();
+
+        switch (requestUrl) {
+            case "/":
+                return this.processPageRequest("index");
+            case "/about":
+                return this.processPageRequest("about");
+            case "/register":
+                return this.processPageRequest("register");
+            case "/login":
+                return this.processPageRequest("login");
+        }
+
+        return this.processResourceRequest();
+    }
+
+    private byte[] processPageRequest(String page) {
+        String path = WebConstants.RESOURCE_PAGE_PATH + page + HTML_EXTENSION;
+
+        File file = new File(path);
+
+        if (!file.exists() || file.isDirectory()) {
+            return this.notFound(("Asset not found").getBytes());
+        }
+
+        byte[] result = null;
+
+        try {
+            result = Files.readAllBytes(Paths.get(path));
+        } catch (IOException e) {
+            this.internalServerError(("Something went wrong").getBytes());
+        }
+
+        this.response.addHeader("Content-Type", this.getMimeType(file));
+
+        return this.ok(result);
+    }
+
+    private byte[] processResourceRequest() {
+        String requestUrl = this.request.getRequestUrl();
+
+        if (requestUrl.startsWith("/assets")) {
+            requestUrl = requestUrl.split("\\/")[2];
+        }
+
+        String path = WebConstants.RESOURCE_ASSET_PATH + requestUrl;
+
+        File file = new File(path);
+
+        if (!file.exists() || file.isDirectory()) {
+            return this.notFound(("Page not found").getBytes());
+        }
+
+        byte[] result = null;
+
+        try {
+            result = Files.readAllBytes(Paths.get(path));
+        } catch (IOException e) {
+            this.internalServerError(("Something went wrong").getBytes());
+        }
+
+        this.response.addHeader("Content-Type", this.getMimeType(file));
+
+        return this.ok(result);
+    }
+
+    private String getMimeType(File file) {
+        String fileName = file.getName();
+
+        if (fileName.endsWith("html")) {
+            return "text/html";
+        } else if (fileName.endsWith("css")) {
+            return "text/css";
+        } else if (fileName.endsWith("jpg") || fileName.endsWith("jpeg")) {
+            return "image/jpeg";
+        } else if (fileName.endsWith("png")) {
+            return "image/png";
+        } else if (fileName.endsWith("ico")) {
+            return "image/x-icon";
+        }
+
+        return "text/plain";
     }
 }

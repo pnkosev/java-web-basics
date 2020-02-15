@@ -7,17 +7,24 @@ import java.net.SocketTimeoutException;
 import java.util.concurrent.FutureTask;
 
 public class Server {
+    private static final String LISTENING_MESSAGE = "Listening on port: ";
     private static final int SOCKET_TIMEOUT_MILLISECONDS = 5000;
     private static final String SOCKET_TIMEOUT_EXCEPTION_MESSAGE = "Socket timeout detection!";
+
     private int port;
+    private int timeouts;
+
     private ServerSocket server;
 
-    public Server() {
-        this.port = WebConstants.SERVER_PORT ;
+    public Server(int port) {
+        this.port = port;
+        this.timeouts = 0;
     }
 
     public void run() throws IOException {
         this.server = new ServerSocket(this.port);
+        System.out.println(LISTENING_MESSAGE + this.port);
+
         this.server.setSoTimeout(SOCKET_TIMEOUT_MILLISECONDS);
 
         while (true) {
@@ -29,6 +36,7 @@ public class Server {
                 task.run();
             } catch (SocketTimeoutException e) {
                 System.out.println(SOCKET_TIMEOUT_EXCEPTION_MESSAGE);
+                this.timeouts++;
 //                e.printStackTrace();
             }
         }
