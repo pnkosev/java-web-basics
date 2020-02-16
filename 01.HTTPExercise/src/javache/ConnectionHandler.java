@@ -24,7 +24,14 @@ public class ConnectionHandler extends Thread {
     @Override
     public void run() {
         try {
-            String requestContent = Reader.readAllLines(this.inputStream);
+            String requestContent = null;
+            while (true) {
+                requestContent = Reader.readAllLines(this.inputStream);
+
+                if (requestContent.length() > 0) {
+                    break;
+                }
+            }
             byte[] byteData = this.requestHandler.handleRequest(requestContent);
             Writer.writeBytes(byteData, this.outputStream);
             this.inputStream.close();
