@@ -57,18 +57,15 @@ public class RequestHandler {
     private byte[] processGetRequest() {
         String requestUrl = this.request.getRequestUrl();
 
-        switch (requestUrl) {
-            case "/":
+        if (this.request.isResource()) {
+            return this.processResourceRequest();
+        } else {
+            if (requestUrl.equals("/")) {
                 return this.processPageRequest("index");
-            case "/about":
-                return this.processPageRequest("about");
-            case "/register":
-                return this.processPageRequest("register");
-            case "/login":
-                return this.processPageRequest("login");
+            } else {
+                return this.processPageRequest(requestUrl);
+            }
         }
-
-        return this.processResourceRequest();
     }
 
     private byte[] processPageRequest(String page) {
@@ -97,7 +94,7 @@ public class RequestHandler {
         String requestUrl = this.request.getRequestUrl();
 
         if (requestUrl.startsWith("/assets")) {
-            requestUrl = requestUrl.split("\\/")[2];
+            requestUrl = requestUrl.split("/")[2];
         }
 
         String path = WebConstants.RESOURCE_ASSET_PATH + requestUrl;
