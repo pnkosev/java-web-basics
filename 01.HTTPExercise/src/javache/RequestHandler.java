@@ -77,13 +77,7 @@ public class RequestHandler {
             return this.notFound(("Asset not found").getBytes());
         }
 
-        byte[] result = null;
-
-        try {
-            result = Files.readAllBytes(Paths.get(path));
-        } catch (IOException e) {
-            return this.internalServerError(("Something went wrong").getBytes());
-        }
+        byte[] result = this.getBytesFromFile(path);
 
         this.response.addHeader("Content-Type", this.getMimeType(file));
 
@@ -105,6 +99,14 @@ public class RequestHandler {
             return this.notFound(("Page not found").getBytes());
         }
 
+        byte[] result = this.getBytesFromFile(path);
+
+        this.response.addHeader("Content-Type", this.getMimeType(file));
+
+        return this.ok(result);
+    }
+
+    private byte[] getBytesFromFile(String path) {
         byte[] result = null;
 
         try {
@@ -113,9 +115,7 @@ public class RequestHandler {
             return this.internalServerError(("Something went wrong").getBytes());
         }
 
-        this.response.addHeader("Content-Type", this.getMimeType(file));
-
-        return this.ok(result);
+        return result;
     }
 
     private String getMimeType(File file) {
