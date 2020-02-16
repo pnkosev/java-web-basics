@@ -23,14 +23,14 @@ public class HttpResponseImpl implements HttpResponse {
     private byte[] getHeadersBytes() {
         StringBuilder sb = new StringBuilder();
 
-        sb.append(WebConstants.SERVER_HTTP_VERSION).append(this.statusCode).append(System.lineSeparator());
+        sb.append(WebConstants.SERVER_HTTP_VERSION).append(" ").append(this.statusCode.getStatusPhrase()).append(System.lineSeparator());
 
         for (Map.Entry<String, String> entry : headers.entrySet()) {
             sb.append(entry.getKey()).append(": ").append(entry.getValue()).append(System.lineSeparator());
         }
 
         if (!this.cookies.isEmpty()) {
-            sb.append("Set Cookie: ");
+            sb.append("Set-Cookie: ");
 
             for (HttpCookie cookie : cookies.values()) {
                 sb.append(cookie.toString());

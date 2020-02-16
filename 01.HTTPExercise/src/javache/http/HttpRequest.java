@@ -7,6 +7,8 @@ public interface HttpRequest {
 
     HashMap<String, String> getBodyParameters();
 
+    HashMap<String, HttpCookie> getCookies();
+
     String getMethod();
 
     void setMethod(String method);

@@ -1,5 +1,6 @@
 package javache.http.impl;
 
+import javache.http.HttpCookie;
 import javache.http.HttpRequest;
 
 import java.util.HashMap;
@@ -7,6 +8,7 @@ import java.util.HashMap;
 public class HttpRequestImpl implements HttpRequest {
     private HashMap<String, String> headers;
     private HashMap<String, String> bodyParams;
+    private HashMap<String, HttpCookie> cookies;
     private String method;
     private String requestUrl;
 
@@ -19,6 +21,7 @@ public class HttpRequestImpl implements HttpRequest {
         this.initializeRequestUrl(requestContent);
         this.initializeHeaders(requestContent);
         this.initializeBodyParams(requestContent);
+        this.initializeCookies();
     }
 
     private void initializeMethod(String requestContent) {
@@ -59,6 +62,22 @@ public class HttpRequestImpl implements HttpRequest {
         }
     }
 
+    private void initializeCookies() {
+        this.cookies = new HashMap<>();
+
+        if (!this.headers.containsKey("Cookie")) {
+            return;
+        }
+
+        String[] allCookies = this.headers.get("Cookie").split(";\\s");
+
+        for (String cookie : allCookies) {
+            String[] cookieKeyValuePair = cookie.split("=");
+
+            this.cookies.putIfAbsent(cookieKeyValuePair[0], new HttpCookieImpl(cookieKeyValuePair[0], cookieKeyValuePair[1]));
+        }
+    }
+
     @Override
     public HashMap<String, String> getHeaders() {
         return this.headers;
@@ -68,6 +87,9 @@ public class HttpRequestImpl implements HttpRequest {
     public HashMap<String, String> getBodyParameters() {
         return this.bodyParams;
     }
+
+    @Override
+    public HashMap<String, HttpCookie> getCookies() { return this.cookies; }
 
     @Override
     public String getMethod() {

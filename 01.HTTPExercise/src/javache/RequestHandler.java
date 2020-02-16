@@ -47,6 +47,14 @@ public class RequestHandler {
         return this.response.getBytes();
     }
 
+    private byte[] redirect(byte[] result, String location) {
+        this.response.setStatusCode(HttpStatus.SeeOther);
+        this.response.addHeader("Location", location);
+        this.response.setContent(result);
+
+        return this.response.getBytes();
+    }
+
     private byte[] internalServerError(byte[] result) {
         this.response.setStatusCode(HttpStatus.InternalServerError);
         this.response.setContent(result);
@@ -55,15 +63,33 @@ public class RequestHandler {
     }
 
     private byte[] processGetRequest() {
-        String requestUrl = this.request.getRequestUrl();
-
         if (this.request.isResource()) {
             return this.processResourceRequest();
         } else {
-            if (requestUrl.equals("/")) {
-                return this.processPageRequest("index");
-            } else {
-                return this.processPageRequest(requestUrl);
+            switch (this.request.getRequestUrl()) {
+                case "/":
+                    return this.processPageRequest("index");
+                case "/about":
+                    return this.processPageRequest("about");
+                case "/register":
+                    return this.processPageRequest("register");
+                case "/login":
+                    this.response.addCookie("username", "Pesho");
+                    return this.processPageRequest("login");
+                case "/forbidden":
+                    if (!this.request.getCookies().containsKey("username")) {
+                        return this.redirect(("You have to be connected to be able to access this route").getBytes(), "/");
+                    }
+                    return this.processPageRequest("forbidden");
+                case "/logout":
+                    if (!this.request.getCookies().containsKey("username")) {
+                        return this.redirect(("You have to be connected to be able to logout").getBytes(), "/");
+                    }
+
+                    this.response.addCookie("username", "deleted; expires=Thu, 01 Jan 1970 00:00:00 GMT;");
+                    return this.redirect(("Hope to see you soon").getBytes(), "/");
+                default:
+                    return this.notFound(("Page not Found").getBytes());
             }
         }
     }
@@ -74,7 +100,7 @@ public class RequestHandler {
         File file = new File(path);
 
         if (!file.exists() || file.isDirectory()) {
-            return this.notFound(("Asset not found").getBytes());
+            return this.notFound(("Page not found").getBytes());
         }
 
         byte[] result = this.getBytesFromFile(path);
@@ -96,7 +122,7 @@ public class RequestHandler {
         File file = new File(path);
 
         if (!file.exists() || file.isDirectory()) {
-            return this.notFound(("Page not found").getBytes());
+            return this.notFound(("Asset not found").getBytes());
         }
 
         byte[] result = this.getBytesFromFile(path);
