@@ -1,6 +1,7 @@
 package javache.http.impl;
 
 import javache.WebConstants;
+import javache.http.HttpCookie;
 import javache.http.HttpResponse;
 import javache.http.HttpStatus;
 
@@ -9,12 +10,14 @@ import java.util.Map;
 
 public class HttpResponseImpl implements HttpResponse {
     private HashMap<String, String> headers;
+    private HashMap<String, HttpCookie> cookies;
     private HttpStatus statusCode;
     private byte[] content;
 
     public HttpResponseImpl() {
-        this.headers = new HashMap<>();
         this.setContent(new byte[0]);
+        this.headers = new HashMap<>();
+        this.cookies = new HashMap<>();
     }
 
     private byte[] getHeadersBytes() {
@@ -24,6 +27,18 @@ public class HttpResponseImpl implements HttpResponse {
 
         for (Map.Entry<String, String> entry : headers.entrySet()) {
             sb.append(entry.getKey()).append(": ").append(entry.getValue()).append(System.lineSeparator());
+        }
+
+        if (!this.cookies.isEmpty()) {
+            sb.append("Set Cookie: ");
+
+            for (HttpCookie cookie : cookies.values()) {
+                sb.append(cookie.toString());
+            }
+
+            // Deleting the last "; "
+            sb.replace(sb.length() - 2, sb.length(), "");
+            sb.append(System.lineSeparator());
         }
 
         sb.append(System.lineSeparator());
@@ -72,5 +87,10 @@ public class HttpResponseImpl implements HttpResponse {
     @Override
     public void addHeader(String header, String value) {
         this.headers.putIfAbsent(header, value);
+    }
+
+    @Override
+    public void addCookie(String name, String value) {
+        this.cookies.putIfAbsent(name, new HttpCookieImpl(name, value));
     }
 }
