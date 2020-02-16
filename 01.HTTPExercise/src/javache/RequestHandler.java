@@ -1,10 +1,9 @@
 package javache;
 
-import javache.http.HttpRequest;
-import javache.http.HttpResponse;
-import javache.http.HttpStatus;
+import javache.http.*;
 import javache.http.impl.HttpRequestImpl;
 import javache.http.impl.HttpResponseImpl;
+import javache.http.impl.HttpSessionImpl;
 
 import java.io.File;
 import java.io.IOException;
@@ -14,8 +13,14 @@ import java.nio.file.Paths;
 public class RequestHandler {
 
     private static final String HTML_EXTENSION = ".html";
+
     private HttpRequest request;
     private HttpResponse response;
+    private HttpSessionStorage sessionStorage;
+
+    public RequestHandler(HttpSessionStorage sessionStorage) {
+        this.sessionStorage = sessionStorage;
+    }
 
     public byte[] handleRequest(String requestContent) {
         this.request = new HttpRequestImpl(requestContent);
@@ -29,6 +34,8 @@ public class RequestHandler {
         } else if (method.equalsIgnoreCase("post")) {
             return new byte[0];
         }
+
+        this.sessionStorage.refreshSessions();
 
         return result;
     }
@@ -74,19 +81,30 @@ public class RequestHandler {
                 case "/register":
                     return this.processPageRequest("register");
                 case "/login":
-                    this.response.addCookie("username", "Pesho");
+                    HttpSession session = new HttpSessionImpl();
+                    session.addAttribute("username", "pesho");
+
+                    this.sessionStorage.addSession(session);
+
+                    this.response.addCookie("Javache", session.getId());
+
                     return this.processPageRequest("login");
                 case "/forbidden":
-                    if (!this.request.getCookies().containsKey("username")) {
+                    if (!this.request.getCookies().containsKey("Javache")) {
                         return this.redirect(("You have to be connected to be able to access this route").getBytes(), "/");
                     }
-                    return this.processPageRequest("forbidden");
+
+                    String sessionId = this.request.getCookies().get("Javache").getValue();
+                    HttpSession currentSession = this.sessionStorage.getById(sessionId);
+                    String username = currentSession.getAttributes().get("username").toString();
+
+                    return this.ok(("<h1>Hello, " + username + "</h1>").getBytes());
                 case "/logout":
-                    if (!this.request.getCookies().containsKey("username")) {
+                    if (!this.request.getCookies().containsKey("Javache")) {
                         return this.redirect(("You have to be connected to be able to logout").getBytes(), "/");
                     }
 
-                    this.response.addCookie("username", "deleted; expires=Thu, 01 Jan 1970 00:00:00 GMT;");
+                    this.response.addCookie("Javache", "deleted; expires=Thu, 01 Jan 1970 00:00:00 GMT;");
                     return this.redirect(("Hope to see you soon").getBytes(), "/");
                 default:
                     return this.notFound(("Page not Found").getBytes());
