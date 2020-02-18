@@ -1,8 +1,10 @@
 package app.web.servlets;
 
 import app.domain.models.service.CarServiceModel;
+import app.domain.models.view.CarViewModel;
 import app.service.CarService;
 import app.util.FileUtil;
+import org.modelmapper.ModelMapper;
 
 import javax.inject.Inject;
 import javax.servlet.ServletException;
@@ -12,6 +14,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @WebServlet("/all")
 public class AllServlet extends HttpServlet {
@@ -20,11 +24,13 @@ public class AllServlet extends HttpServlet {
 
     private final FileUtil fileUtil;
     private final CarService carService;
+    private final ModelMapper modelMapper;
 
     @Inject
-    public AllServlet(FileUtil fileUtil, CarService carService) {
+    public AllServlet(FileUtil fileUtil, CarService carService, ModelMapper modelMapper) {
         this.fileUtil = fileUtil;
         this.carService = carService;
+        this.modelMapper = modelMapper;
     }
 
     @Override
@@ -33,7 +39,12 @@ public class AllServlet extends HttpServlet {
 
         StringBuilder sb = new StringBuilder();
 
-        for (CarServiceModel car : carService.getAll()) {
+        List<CarViewModel> cars = carService.getAll()
+                .stream()
+                .map(c -> this.modelMapper.map(c, CarViewModel.class))
+                .collect(Collectors.toList());
+
+        for (CarViewModel car : cars) {
             sb
                     .append(
                             String.format(
