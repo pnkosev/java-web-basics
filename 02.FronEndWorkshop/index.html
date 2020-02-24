@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SoftUni Courses</title>
+    <link rel="stylesheet" href="styles/bootstrap.min.css">
+    <link rel="stylesheet" href="styles/style.css">
+    <script src="https://code.jquery.com/jquery-3.4.1.js"
+        integrity="sha256-WpOohJOqMqqyKL9FccASB9O0KwACQJpFTUBLTYOVvVU=" crossorigin="anonymous"></script>
+    <script src="./scripts/solution.js"></script>
+</head>
+
+<body>
+    <header>
+        <a href="/" class="float-right">
+            <img src="images/logo.png" alt="SoftUni Logo" height="40px">
+        </a>
+        <h1>SoftUni Courses</h1>
+    </header>
+    <section class="container">
+        <div class="row justify-content-around">
+            <div class="col-4">
+                <div class="card">
+                    <h2>Available Courses</h2>
+                    <form action="/" method="POST" id="form">
+                        <ul class="list" id="available-courses">
+                        </ul>
+                        <ul class="d-flex list" id="education-types">
+                        </ul>
+                        <div class="text-center box-footer">
+                            <button type="submit" id="submit-btn" class="btn btn-primary btn-sm">Sign me up</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+            <div class="col-4">
+                <div class="card">
+                    <h2>My Courses</h2>
+                    <div class="course-body">
+                        <ul id="my-courses" class="list list-bullets">
+                        </ul>
+                    </div>
+                    <div class="box-footer">
+                        <p class="text-center">Cost: <span id="price-tag">0.00</span> BGN</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <footer class="text-center">
+        <a href="https://softuni.bg">
+            <span>
+                Go to SoftUni
+            </span>
+        </a>
+        <div class="background-img"></div>
+    </footer>
+</body>
+
+</html>
