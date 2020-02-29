@@ -49,7 +49,7 @@
     <div class='row mb-4 d-flex justify-content-around'>
         <% for (CarViewModel car : (List<CarViewModel>) request.getAttribute("carViewModels")) {%>
         <div class="col-md-4 d-flex flex-column bg-text mb-3">
-            <h2>Owner: <%= car.getUsername() %>></h2>
+            <h2>Owner: <%= car.getUserUsername() %></h2>
             <h2>Brand: <%= car.getBrand() %></h2>
             <h4>Model: <%= car.getModel() %></h4>
             <h4>Year: <%= car.getYear() %></h4>

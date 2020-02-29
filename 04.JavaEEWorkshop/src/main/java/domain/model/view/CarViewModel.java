@@ -7,7 +7,7 @@ public class CarViewModel {
     private String model;
     private String year;
     private Engine engine;
-    private String username;
+    private String userUsername;
 
     public String getBrand() {
         return this.brand;
@@ -41,11 +41,7 @@ public class CarViewModel {
         this.engine = engine;
     }
 
-    public String getUsername() {
-        return this.username;
-    }
+    public String getUserUsername() { return userUsername; }
 
-    public void setUsername(String username) {
-        this.username = username;
-    }
+    public void setUserUsername(String userUsername) { this.userUsername = userUsername; }
 }

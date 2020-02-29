@@ -39,7 +39,7 @@ public class CarRepositoryImpl implements CarRepository {
         return TransactionWrapper
                 .getListInTransaction(this.entityManager, () -> this.entityManager
                         .createQuery("SELECT c FROM Car as c", Car.class)
-                        .getSingleResult());
+                        .getResultList());
     }
 
     @Override
