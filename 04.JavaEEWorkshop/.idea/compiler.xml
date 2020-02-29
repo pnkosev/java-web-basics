@@ -7,6 +7,7 @@
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
         <module name="javaee-jsp-jpa" />
+        <module name="04.JavaEEWorkshop" />
       </profile>
     </annotationProcessing>
   </component>

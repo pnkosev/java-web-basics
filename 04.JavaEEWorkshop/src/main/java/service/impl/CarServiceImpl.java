@@ -1,10 +1,12 @@
 package service.impl;
 
 import domain.entity.Car;
+import domain.entity.User;
 import domain.model.service.CarServiceModel;
 import domain.model.service.UserServiceModel;
 import org.modelmapper.ModelMapper;
 import repository.api.CarRepository;
+import repository.api.UserRepository;
 import service.api.CarService;
 import service.api.UserService;
 
@@ -14,28 +16,29 @@ import java.util.stream.Collectors;
 
 public class CarServiceImpl implements CarService {
 
-    private final UserService userService;
+    private final UserRepository userRepository;
 
     private final CarRepository carRepository;
 
     private final ModelMapper modelMapper;
 
     @Inject
-    public CarServiceImpl(UserService userService, CarRepository carRepository, ModelMapper modelMapper) {
-        this.userService = userService;
+    public CarServiceImpl(UserRepository userRepository, CarRepository carRepository, ModelMapper modelMapper) {
+        this.userRepository = userRepository;
         this.carRepository = carRepository;
         this.modelMapper = modelMapper;
     }
 
     @Override
-    public void createCar(CarServiceModel car) {
-        UserServiceModel user = this.userService
-                .findUserByUsername(car.getUser().getUsername());
+    public void createCar(CarServiceModel carServiceModel) {
+        User user = this.userRepository.findByUsername(carServiceModel.getUser().getUsername());
+
+        Car car = this.modelMapper.map(carServiceModel, Car.class);
 
         car.setUser(user);
+        user.getCars().add(car);
 
-        this.carRepository
-                .merge(this.modelMapper.map(car, Car.class));
+        this.carRepository.save(car);
     }
 
     @Override

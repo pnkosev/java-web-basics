@@ -46,7 +46,7 @@ public class Car extends BaseEntity {
         this.engine = engine;
     }
 
-    @ManyToOne(cascade = CascadeType.PERSIST)
+    @ManyToOne
     @JoinColumn(name = "user_id", referencedColumnName = "id")
     public User getUser() {
         return this.user;
