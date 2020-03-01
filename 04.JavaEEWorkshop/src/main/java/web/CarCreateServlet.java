@@ -41,7 +41,7 @@ public class CarCreateServlet extends HttpServlet {
         carCreateBindingModel.setBrand(req.getParameter("brand"));
         carCreateBindingModel.setModel(req.getParameter("model"));
         carCreateBindingModel.setYear(req.getParameter("year"));
-        carCreateBindingModel.setEngine(Engine.valueOf(req.getParameter("engine").toUpperCase()));
+        carCreateBindingModel.setEngine(Engine.valueOf(req.getParameter("engine").toUpperCase())); // TO CHECK
 
         String usernameOfCreator = req.getSession().getAttribute("username").toString();
 

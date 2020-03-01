@@ -38,6 +38,7 @@ public class Car extends BaseEntity {
     }
 
     @Column
+    @Enumerated(EnumType.STRING)
     public Engine getEngine() {
         return this.engine;
     }
