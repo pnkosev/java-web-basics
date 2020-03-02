@@ -28,7 +28,7 @@ public class UserRegisterServlet extends HttpServlet {
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        req.getRequestDispatcher("/user-register.jsp")
+        req.getRequestDispatcher("/jsp/user-register.jsp")
                 .forward(req, resp);
     }
 
@@ -41,7 +41,7 @@ public class UserRegisterServlet extends HttpServlet {
         userRegisterBindingModel.setEmail(req.getParameter("email"));
 
         if (!userRegisterBindingModel.getPassword().equals(userRegisterBindingModel.getConfirmPassword())) {
-            req.getRequestDispatcher("user-register.jsp")
+            req.getRequestDispatcher("/jsp/user-register.jsp")
                     .forward(req, resp);
         }
 

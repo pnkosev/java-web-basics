@@ -3,12 +3,10 @@ package service.impl;
 import domain.entity.Car;
 import domain.entity.User;
 import domain.model.service.CarServiceModel;
-import domain.model.service.UserServiceModel;
 import org.modelmapper.ModelMapper;
 import repository.api.CarRepository;
 import repository.api.UserRepository;
 import service.api.CarService;
-import service.api.UserService;
 
 import javax.inject.Inject;
 import java.util.List;
@@ -31,14 +29,16 @@ public class CarServiceImpl implements CarService {
 
     @Override
     public void createCar(CarServiceModel carServiceModel) {
-        User user = this.userRepository.findByUsername(carServiceModel.getUser().getUsername());
+        String name = carServiceModel.getUser().getUsername();
+        User user = this.userRepository.findByUsername(name);
 
         Car car = this.modelMapper.map(carServiceModel, Car.class);
 
         car.setUser(user);
         user.getCars().add(car);
 
-        this.carRepository.save(car);
+        this.userRepository.merge(user);
+//        this.carRepository.save(car); // IF I LEAVE THIS AND THE MERGE OF THE USER- THE CAR GETS REGISTERED TWICE
     }
 
     @Override

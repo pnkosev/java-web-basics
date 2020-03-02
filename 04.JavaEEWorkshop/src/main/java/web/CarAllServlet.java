@@ -37,7 +37,7 @@ public class CarAllServlet extends HttpServlet {
 
         req.setAttribute("carViewModels", carViewModels);
 
-        req.getRequestDispatcher("/cars-all.jsp")
+        req.getRequestDispatcher("/jsp/cars-all.jsp")
                 .forward(req, resp);
     }
 }

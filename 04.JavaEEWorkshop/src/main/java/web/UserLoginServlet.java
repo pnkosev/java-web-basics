@@ -28,7 +28,7 @@ public class UserLoginServlet extends HttpServlet {
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        req.getRequestDispatcher("/user-login.jsp")
+        req.getRequestDispatcher("/jsp/user-login.jsp")
                 .forward(req, resp);
     }
 
@@ -40,7 +40,7 @@ public class UserLoginServlet extends HttpServlet {
         userLoginBindingModel.setPassword(req.getParameter("password"));
 
         if (!this.userService.loginUser(this.modelMapper.map(userLoginBindingModel, UserServiceModel.class))) {
-            req.getRequestDispatcher("/user-login.jsp")
+            req.getRequestDispatcher("/jsp/user-login.jsp")
                     .forward(req, resp);
 
             return;
@@ -48,6 +48,6 @@ public class UserLoginServlet extends HttpServlet {
 
         req.getSession().setAttribute("username", userLoginBindingModel.getUsername());
 
-        resp.sendRedirect("/home.jsp");
+        resp.sendRedirect("/home");
     }
 }

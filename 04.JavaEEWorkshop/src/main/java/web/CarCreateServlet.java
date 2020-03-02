@@ -30,7 +30,7 @@ public class CarCreateServlet extends HttpServlet {
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        req.getRequestDispatcher("/car-create.jsp")
+        req.getRequestDispatcher("/jsp/car-create.jsp")
                 .forward(req, resp);
     }
 

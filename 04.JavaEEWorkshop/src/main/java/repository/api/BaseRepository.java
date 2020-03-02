@@ -1,5 +1,8 @@
 package repository.api;
 
+import util.api.RepositoryActionInvoker;
+import util.api.RepositoryActionResult;
+
 import java.util.List;
 
 public interface BaseRepository<Entity, Id> {
@@ -12,4 +15,6 @@ public interface BaseRepository<Entity, Id> {
     Entity findById(Id id);
 
     long size();
+
+    RepositoryActionResult execute(RepositoryActionInvoker invoker);
 }
