@@ -24,7 +24,8 @@ public class UserRepositoryImpl extends BaseRepositoryImpl<User, Integer> implem
                                                 "FROM User AS u " +
                                                 "WHERE u.username = :username AND u.password = :password", User.class)
                                 .setParameter("username", username)
-                                .setParameter("password", password).getSingleResult());
+                                .setParameter("password", password)
+                                .getSingleResult());
     }
 
     @Override

@@ -7,6 +7,7 @@ import util.api.RepositoryActionInvoker;
 import util.api.RepositoryActionResult;
 import util.impl.RepositoryActionResultImpl;
 
+import javax.inject.Inject;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityTransaction;
 import java.lang.reflect.ParameterizedType;
@@ -16,7 +17,7 @@ public class BaseRepositoryImpl<E, Id> implements BaseRepository<E, Id> {
 
     private Class<E> clazz;
 
-    protected final EntityManager entityManager;
+    protected EntityManager entityManager;
 
     protected BaseRepositoryImpl(EntityManager entityManager) {
         this.entityManager = entityManager;
