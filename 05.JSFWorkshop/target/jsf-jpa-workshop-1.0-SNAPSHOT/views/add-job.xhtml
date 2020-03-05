@@ -1,0 +1,45 @@
+<ui:composition
+        template="templates/common.xhtml"
+        xmlns:ui="http://java.sun.com/jsf/facelets"
+        xmlns:h="http://java.sun.com/jsf/html"
+>
+
+    <ui:define name="content">
+
+        <hr class="my-3"/>
+        <h1 class="text-center">Add Job</h1>
+        <hr class="hr-3"/>
+        <h:form class="mx-auto w-15" method="post">
+            <div class="form-group">
+                <div class="label-holder d-flex justify-content-center">
+                    <label for="sector" class="h3 mb-2">Sector</label>
+                </div>
+                <h:inputText class="form-control" id="sector" name="sector" value="#{jobCreationBean.job.sector}" />
+            </div>
+            <div class="form-group">
+                <div class="label-holder d-flex justify-content-center">
+                    <label for="profession" class="h3 mb-2">Profession</label>
+                </div>
+                <h:inputText class="form-control" id="profession" name="profession" value="#{jobCreationBean.job.profession}" />
+            </div>
+            <div class="form-group">
+                <div class="label-holder d-flex justify-content-center">
+                    <label for="salary" class="h3 mb-2">Salary</label>
+                </div>
+                <h:inputText class="form-control" id="salary" name="salary" value="#{jobCreationBean.job.salary}" />
+            </div>
+            <div class="form-group">
+                <div class="label-holder d-flex justify-content-center">
+                    <label for="description" class="h3 mb-2">Description</label>
+                </div>
+                <h:inputTextarea rows="4" class="form-control" id="description" name="description" value="#{jobCreationBean.job.description}" />
+            </div>
+            <div class="button-holder d-flex justify-content-center">
+                <h:commandButton class="btn btn-info text-white" action="#{jobCreationBean.addJob}" value="Add Job" />
+            </div>
+        </h:form>
+        <hr class="my-3"/>
+
+    </ui:define>
+
+</ui:composition>
