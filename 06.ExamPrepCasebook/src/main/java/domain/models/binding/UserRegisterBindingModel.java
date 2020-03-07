@@ -8,6 +8,8 @@ public class UserRegisterBindingModel {
 
     private String confirmPassword;
 
+    private String gender;
+
     public String getUsername() {
         return username;
     }
@@ -30,5 +32,13 @@ public class UserRegisterBindingModel {
 
     public void setConfirmPassword(String confirmPassword) {
         this.confirmPassword = confirmPassword;
+    }
+
+    public String getGender() {
+        return gender;
+    }
+
+    public void setGender(String gender) {
+        this.gender = gender;
     }
 }

@@ -1,6 +1,7 @@
 package web;
 
 import javax.faces.context.FacesContext;
+import javax.servlet.http.HttpSession;
 import java.io.IOException;
 
 public class BaseBean {
@@ -11,7 +12,7 @@ public class BaseBean {
         try {
             FacesContext.getCurrentInstance()
                     .getExternalContext()
-                    .redirect(String.format("/vies%s.jsf", url));
+                    .redirect(String.format("/views%s.jsf", url));
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -22,6 +23,11 @@ public class BaseBean {
                 .getExternalContext()
                 .getSessionMap()
                 .put(key, value);
+    }
+
+    protected String getParamFromSession(String paramName) {
+        return (String) ((HttpSession) FacesContext.getCurrentInstance()
+                .getExternalContext().getSession(false)).getAttribute(paramName);
     }
 
     protected String getParamFromQuery(String paramName) {

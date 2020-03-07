@@ -15,4 +15,8 @@ public interface UserService {
     UserServiceModel getByUsernameAndPassword(String username, String password);
 
     List<UserServiceModel> getAll();
+
+    void addFriend(String userId, String friendId);
+
+    void removeFriend(String userId, String friendId);
 }

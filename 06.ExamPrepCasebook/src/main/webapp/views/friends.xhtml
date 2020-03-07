@@ -1,0 +1,38 @@
+<ui:composition
+        template="templates/common.xhtml"
+        xmlns:ui="http://java.sun.com/jsf/facelets"
+        xmlns:h="http://xmlns.jcp.org/jsf/html">
+
+    <ui:define name="content">
+
+        <main>
+            <hr class="my-2"/>
+            <div class="text-center mt-3">
+                <h3 class="text-info">Casebook</h3>
+                <h4 class="text-info">Connecting People</h4>
+            </div>
+            <hr class="my-4"/>
+            <div class="container">
+
+                <div class="row py-4 d-flex flex-column">
+                    <ui:repeat value="#{userFriendsBean.friends}" var="friend">
+                        <div class="row d-flex flex-row col-md-5 mb-3 mx-auto">
+                            <h:link class="col-md-6 h5 d-inline-block text-center"
+                                    outcome="profile?id=#{friend.id}">#{friend.username}</h:link>
+                            <h:form>
+                                <h:commandLink
+                                        class="col-md-3 text-center btn btn-danger d-inline-block"
+                                        action="#{userFriendsBean.removeFriend(friend.id)}"
+                                        value="Unfriend"/>
+                            </h:form>
+                        </div>
+                    </ui:repeat>
+                </div>
+
+            </div>
+            <hr class="my-3"/>
+        </main>
+
+    </ui:define>
+
+</ui:composition>

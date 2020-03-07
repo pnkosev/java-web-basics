@@ -1,7 +1,9 @@
 package service;
 
+import domain.entities.Gender;
 import domain.entities.User;
 import domain.models.service.UserServiceModel;
+import org.apache.commons.codec.digest.DigestUtils;
 import org.modelmapper.ModelMapper;
 import repository.UserRepository;
 
@@ -23,12 +25,17 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public void create(UserServiceModel userServiceModel) {
-        this.userRepository.save(this.modelMapper.map(userServiceModel, User.class));
+        User user = this.modelMapper.map(userServiceModel, User.class);
+        user.setPassword(DigestUtils.sha256Hex(userServiceModel.getPassword()));
+        user.setGender(stringToGender(userServiceModel.getGender()));
+        this.userRepository.save(user);
     }
 
     @Override
     public void update(UserServiceModel userServiceModel) {
-        this.userRepository.update(this.modelMapper.map(userServiceModel, User.class));
+        User user = this.modelMapper.map(userServiceModel, User.class);
+        user.setGender(stringToGender(userServiceModel.getGender()));
+        this.userRepository.update(user);
     }
 
     @Override
@@ -38,7 +45,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public UserServiceModel getByUsernameAndPassword(String username, String password) {
-        return this.modelMapper.map(this.userRepository.findByUsernameAndPassword(username, password), UserServiceModel.class);
+        return this.modelMapper.map(this.userRepository.findByUsernameAndPassword(username, DigestUtils.sha256Hex(password)), UserServiceModel.class);
     }
 
     @Override
@@ -47,5 +54,33 @@ public class UserServiceImpl implements UserService {
                 .stream()
                 .map(u -> this.modelMapper.map(u, UserServiceModel.class))
                 .collect(Collectors.toList());
+    }
+
+    @Override
+    public void addFriend(String userId, String friendId) {
+        User user = this.userRepository.findById(userId);
+        User friend = this.userRepository.findById(friendId);
+
+        user.getFriends().add(friend);
+        friend.getFriends().add(user);
+
+        this.userRepository.update(user);
+        this.userRepository.update(friend);
+    }
+
+    @Override
+    public void removeFriend(String userId, String friendId) {
+        User user = this.userRepository.findById(userId);
+        User friend = this.userRepository.findById(friendId);
+
+        user.getFriends().remove(friend);
+        friend.getFriends().remove(user);
+
+        this.userRepository.update(user);
+        this.userRepository.update(friend);
+    }
+
+    private Gender stringToGender(String gender) {
+        return Gender.valueOf(gender.toUpperCase());
     }
 }

@@ -5,6 +5,7 @@ import domain.models.service.UserServiceModel;
 import org.modelmapper.ModelMapper;
 import service.UserService;
 
+import javax.annotation.PostConstruct;
 import javax.enterprise.context.RequestScoped;
 import javax.inject.Inject;
 import javax.inject.Named;
@@ -27,6 +28,11 @@ public class UserRegisterBean extends BaseBean {
         this.modelMapper = modelMapper;
     }
 
+    @PostConstruct
+    private void init() {
+        this.user = new UserRegisterBindingModel();
+    }
+
     public void register() {
         if (!this.user.getPassword().equals(this.user.getConfirmPassword())) {
             this.redirect("/register");
@@ -38,9 +44,7 @@ public class UserRegisterBean extends BaseBean {
         this.redirect("/login");
     }
 
-    public UserRegisterBindingModel getUser() {
-        return user;
-    }
+    public UserRegisterBindingModel getUser() { return user; }
 
     public void setUser(UserRegisterBindingModel user) {
         this.user = user;
