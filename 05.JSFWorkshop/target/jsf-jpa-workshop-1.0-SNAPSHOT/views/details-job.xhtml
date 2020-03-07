@@ -1,0 +1,39 @@
+<ui:composition
+        template="templates/common.xhtml"
+        xmlns:ui="http://java.sun.com/jsf/facelets"
+>
+
+    <ui:define name="content">
+
+        <hr class="my-3"/>
+        <div class="text-center mb-4">
+            <h1>Job Details</h1>
+        </div>
+        <hr class="my-3" />
+        <div class="container-fluid">
+            <div class="row justify-content-center">
+                <div class="col-md-6">
+                    <div class="label mt-2">
+                        <h2 class="text-center">Sector</h2>
+                        <h4 class="text-center">#{jobDetailsBean.jobViewModel.sector}</h4>
+                    </div>
+                    <div class="label mt-4">
+                        <h2 class="text-center">Profession</h2>
+                        <h4 class="text-center">#{jobDetailsBean.jobViewModel.profession}</h4>
+                    </div>
+                    <div class="label mt-4">
+                        <h2 class="text-center">Salary</h2>
+                        <h4 class="text-center">$#{jobDetailsBean.jobViewModel.salary}</h4>
+                    </div>
+                    <div class="label mt-4">
+                        <h2 class="text-center">Description</h2>
+                        <p class="text-center">#{jobDetailsBean.jobViewModel.description}</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <hr class="my-3"/>
+
+    </ui:define>
+
+</ui:composition>
